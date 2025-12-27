@@ -93,8 +93,16 @@ html, body {
 <div id="light"></div>
 
 <div id="video">
-    <video id="nyVideo" controls playsinline>
-        <source src="https://drive.google.com/uc?export=download&id=1ALy_dDiPukNrxDUHdw1hBKmX_5RDY8Yh" type="video/mp4">
+    <!-- 🔑 muted + autoplay + playsinline สำคัญมาก -->
+    <video
+        id="nyVideo"
+        muted
+        autoplay
+        playsinline
+        preload="auto">
+        <source
+            src="https://drive.google.com/uc?export=download&id=1ALy_dDiPukNrxDUHdw1hBKmX_5RDY8Yh"
+            type="video/mp4">
     </video>
 </div>
 
@@ -137,17 +145,22 @@ updateCountdown();
 gift.addEventListener("click", () => {
     gift.style.display = "none";
 
+    // เล่นเสียง (ต้องมี user interaction)
     sfx.currentTime = 0;
     sfx.play();
 
     light.style.display = "block";
 
-    // ครบ 5 วิ → video เล่นทันที
+    // ครบ 5 วิ → video
     setTimeout(() => {
         light.style.display = "none";
         videoBox.style.display = "block";
+
         video.currentTime = 0;
-        video.play();
+        video.play().catch(() => {
+            // fallback กัน autoplay fail
+            console.log("Autoplay blocked, but user already interacted.");
+        });
     }, 5000);
 });
 </script>
